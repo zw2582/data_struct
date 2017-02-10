@@ -8,13 +8,14 @@ import java.util.Random;
 public class BubblingSort {
 	
 	public static void main(String[] args) {
-		int[] l = new int[10000];
+		int zhongzi = 10000;
+		int[] l = new int[zhongzi];
 		int index = 0;
 		Random random = new Random(5);
-		for(int i = 10000; i > 1; i--) {
-			l[index++] = random.nextInt(10000);
+		for(int i = zhongzi; i > 1; i--) {
+			l[index++] = random.nextInt(zhongzi);
 		}
-//		int[] l = new int[]{5,4,3,2,1};
+//		l = new int[]{5,4,3,2,1};
 		
 		BubblingSort bs = new BubblingSort();
 		long currentTimeMillis1 = System.currentTimeMillis();
@@ -26,13 +27,15 @@ public class BubblingSort {
 		
 //		bs.simleChooseSort(l);	//33毫秒
 		
-		bs.insertSort(l);	//35毫秒
+//		bs.insertSort(l);	//35毫秒
+		
+		bs.shellSort(l);	//5毫秒
 		
 		long currentTimeMillis2 = System.currentTimeMillis();
 		System.out.println(currentTimeMillis2 - currentTimeMillis1);
-		for(int i : l) {
+		/*for(int i : l) {
 			System.out.print(i+"\t");
-		}
+		}*/
 	}
 
 	/**
@@ -82,6 +85,7 @@ public class BubblingSort {
 	
 	/**
 	 * 简单选择排序
+	 * 选出从i开始到n之间最小的元素，并与i替换
 	 * @param l
 	 */
 	public void simleChooseSort(int[] l) {
@@ -113,6 +117,30 @@ public class BubblingSort {
 				l[j + 1] = d;
 			}
 		}
+	}
+	
+	/**
+	 * 希尔排序
+	 * 是第一个脱离O(n2)的排序算法
+	 * 时间复杂度O(n3/2)
+	 * @param l
+	 */
+	public void shellSort(int[] l) {
+		int inc = l.length;
+		int i,j,d;
+		do {
+			inc = inc / 3 +1;
+			
+			for (i = inc +1; i < l.length; i++) {
+				if(l[i] < l[i - inc]) {
+					d = l[i];
+					for(j = i - inc; j >=0 && l[j] > d; j-=inc) {
+						l[j + inc] = l[j];
+					}
+					l[j + inc] = d;
+				}
+			}
+		}while(inc > 1);
 	}
 	
 	private void swap(int[] l, int i, int j) {
