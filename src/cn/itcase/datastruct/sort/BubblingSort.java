@@ -8,7 +8,7 @@ import java.util.Random;
 public class BubblingSort {
 	
 	public static void main(String[] args) {
-		int zhongzi = 10000;
+		int zhongzi = 1000000;
 		int[] l = new int[zhongzi];
 		int index = 0;
 		Random random = new Random(5);
@@ -29,7 +29,12 @@ public class BubblingSort {
 		
 //		bs.insertSort(l);	//35毫秒
 		
-		bs.shellSort(l);	//5毫秒
+//		bs.shellSort(l);	//5毫秒
+		
+//		bs.heapSort(l);		//7毫秒
+		
+		/*QuickSort qs = new QuickSort();
+		qs.sort(l, 0, l.length-1);*/
 		
 		long currentTimeMillis2 = System.currentTimeMillis();
 		System.out.println(currentTimeMillis2 - currentTimeMillis1);
@@ -59,8 +64,8 @@ public class BubblingSort {
 	public void secondSort(int[] l) {
 		for(int i = 0; i < l.length; i++) {
 			for(int j = l.length - 1; j > i; j--) {
-				if (l[i] > l[j]) {
-					swap(l, i, j);
+				if (l[j-1] > l[j]) {
+					swap(l, j-1, j);
 				}
 			}
 		}
@@ -75,8 +80,8 @@ public class BubblingSort {
 		for(int i = 0; i< l.length && flag; i++) {
 			flag = false;
 			for(int j = l.length -1; j > i; j--) {
-				if (l[i] > l[j]) {
-					swap(l, i, j);
+				if (l[j-1] > l[j]) {
+					swap(l, j-1, j);
 					flag = true;
 				}
 			}
@@ -141,6 +146,40 @@ public class BubblingSort {
 				}
 			}
 		}while(inc > 1);
+	}
+	
+	/**
+	 * 堆排序
+	 * 时间复杂度：O(nlogn)
+	 * @param l
+	 */
+	public void heapSort(int[] l) {
+		int length = l.length;
+		for(int i = length /2; i>=0; i--) {
+			heapadjust(l, i, length-1);
+		}
+		
+		for(int i = l.length-1; i>=0 ; i--) {
+			swap(l, 0, i);
+			heapadjust(l, 0, i-1);
+		}
+	}
+	
+	public void heapadjust(int[] l, int s, int m) {
+		int j,temp;
+		temp = l[s];
+		for(j = 2*s; j <= m; j *= 2) {
+			if(j < m && l[j] < l[j+1]) {
+				j++;
+			}
+			
+			if(l[j] <= temp) {
+				break;
+			}
+			l[s] = l[j];
+			s = j;
+		}
+		l[s] = temp;
 	}
 	
 	private void swap(int[] l, int i, int j) {
